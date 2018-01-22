@@ -28,3 +28,4 @@ const course = (
 ReactDOM.render(course,document.getElementById('root'));
 
 // Komentarze JSX
+// https://eduweb.pl/player/reactjs-w-praktyce/komentarze-w-jsx
