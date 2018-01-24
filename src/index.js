@@ -465,25 +465,29 @@ const CourseActions = ({data}) => (
 )
 
 const CourseDetails = ({data}) => (
-  <div>
-    <table className="table course_details">
-      <tbody>
-        <tr>
-          <th>Autor</th>
-          <td>{data.author}</td>
-        </tr>
-        <tr>
-          <th>Czas trwania</th>
-          <td>{data.duration}</td>
-        </tr>
-      </tbody>
-    </table>
-    <CartButton in_cart={true} />
-  </div>
+    <div>
+      <table className="table course_details">
+        <tbody>
+          <tr>
+            <th>Autor</th>
+            <td>{data.author}</td>
+          </tr>
+          <tr>
+            <th>Czas trwania</th>
+            <td>{data.duration}</td>
+          </tr>
+        </tbody>
+      </table>
+      <CartButton in_cart={false} />
+    </div>
+)
+
+const CartDetails = ({data}) => (
+  <CartButton in_cart={true} />
 )
 
 const Course = (props) => {
-  const {data} = props;
+  const {data, InCart} = props;
 
 	return (
 	  	<div className="media course">
@@ -496,14 +500,13 @@ const Course = (props) => {
 		  		<h3>{data.title} <NewLabel {...props}/></h3>
 	  			<p>{data.description}</p>
 
-	  			<CoursePromoLabel {...props}/>
-
-		  		<CourseActions {...props}/>
+	  			{props.children}
 	  		</div>
 
+        { InCart ?
 	  		<div className="media-right">
-	  			<CourseDetails {...props} />
-		  	</div>
+	  			<props.InCart {...props} />
+		  	</div> : null }
 		</div>
 	)
 }
@@ -513,13 +516,33 @@ const CoursesList = (props) => {
 
 	return (
     <div>
-      {list.map((data) => <Course data={data} key={data.id} />)}
+      <h1> Kursy </h1>
+      <hr />
+      {list.map((data) => <Course data={data} key={data.id} InCart={CourseDetails}>
+        <CoursePromoLabel data={data}/>
+        <CourseActions data={data}/>
+      </Course>)}
+    </div>
+	)
+}
+
+const ShoppingCartList = (props) => {
+  const list = props.list;
+
+	return (
+    <div>
+      <h1> Koszyk </h1>
+      <hr />
+      {list.map((data) => <Course data={data} key={data.id} InCart={CartDetails}>
+        <Button label="Przenies do ulubionych" icon="star" />
+      </Course>)}
     </div>
 	)
 }
 
 
 let list = [], page = 1, perpage = 3;
+const prodInCart = courses_data.slice(0,1);
 
 document.getElementById('show_more').addEventListener('click', function(){
   page+=1;
@@ -529,6 +552,6 @@ document.getElementById('show_more').addEventListener('click', function(){
 function update(){
   const count = page * perpage;
   list = courses_data.slice(0,count);
-  ReactDOM.render(<CoursesList list={list} />, document.getElementById('root'));
+  ReactDOM.render(<div><ShoppingCartList list={prodInCart} /><CoursesList list={list} /></div>, document.getElementById('root'));
 }
 update();
