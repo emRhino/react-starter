@@ -11,6 +11,7 @@ const courses_data = [
 		"duration": "8 godzin",
 		"categories": ["JavaScript", "jQuery"],
 		"is_new": true,
+		"is_promo": true
 	},
 	{
 		"id": 1,
@@ -19,7 +20,8 @@ const courses_data = [
 		"image": "http://eduweb.pl/Images/Training/miniaturka-do-opisu-kursu_9c8b5fd6-cda2-4b2f-881e-0039d189326e.png",
 		"author": "Grzegorz Róg",
 		"duration": "13 godzin",
-		"categories": ["Webdesign", "UI", "UX"]
+		"categories": ["Webdesign", "UI", "UX"],
+		"is_promo": true
 	},
 	{
 		"id": 3,
@@ -483,7 +485,7 @@ const CourseDetails = ({data}) => (
 )
 
 const Course = (props) => {
-  const {data} = props;
+	const {data} = props;
 
 	return (
 	  	<div className="media course">
@@ -496,9 +498,8 @@ const Course = (props) => {
 		  		<h3>{data.title} <NewLabel {...props}/></h3>
 	  			<p>{data.description}</p>
 
-	  			<CoursePromoLabel {...props}/>
+					{props.children}
 
-		  		<CourseActions {...props}/>
 	  		</div>
 
 	  		<div className="media-right">
@@ -512,14 +513,38 @@ const CoursesList = (props) => {
   const list = props.list;
 
 	return (
-    <div>
-      {list.map((data) => <Course data={data} key={data.id} />)}
-    </div>
+		<div>
+			<h1> Kursy </h1>
+			<hr />
+			<div>
+				{list.map((data) => <Course data={data} key={data.id}>
+					<CoursePromoLabel data={data} />
+					<CourseActions data={data} />
+				</Course>)}
+			</div>
+		</div>
+	)
+}
+
+const ShoppingCartList = (props) => {
+  const list = props.list;
+
+	return (
+		<div>
+			<h1> Koszyk </h1>
+			<hr />
+			<div>
+				{list.map((data) => <Course data={data} key={data.id}>
+					<Button label="Przenies do ulubionych" icon="star" />
+				</Course>)}
+			</div>
+		</div>
 	)
 }
 
 
 let list = [], page = 1, perpage = 3;
+const cart_list = courses_data.slice(0,1);
 
 document.getElementById('show_more').addEventListener('click', function(){
   page+=1;
@@ -529,6 +554,9 @@ document.getElementById('show_more').addEventListener('click', function(){
 function update(){
   const count = page * perpage;
   list = courses_data.slice(0,count);
-  ReactDOM.render(<CoursesList list={list} />, document.getElementById('root'));
+	ReactDOM.render(<div>
+		<ShoppingCartList list={cart_list} />
+		<CoursesList list={list} />
+	</div>, document.getElementById('root'));
 }
 update();
