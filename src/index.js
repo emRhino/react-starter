@@ -544,6 +544,17 @@ const ShoppingCartList = (props) => {
 	)
 }
 
+class Button extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      return {
+        active
+      }
+    }
+  }
+}
+
 class App extends React.Component {
 
 	constructor(props) {
@@ -575,7 +586,7 @@ class App extends React.Component {
 				<div className="row">
 					<div className="col-xs-12">
 						<hr/>
-						<button className="btn btn-default btn-block" id="show_more" onClick={this.loadMore}> Pokaż więcej ... </button>
+						<button className="btn btn-default btn-block btn-custom" id="show_more" onClick={this.loadMore}> Pokaż więcej ... </button>
 					</div>
 				</div>
 			</div>
